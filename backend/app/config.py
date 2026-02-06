@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # App
     app_name: str = "CoverComposer"
+    GROQ_API_KEY: str
     DEBUG: bool = True
     
     # Database
