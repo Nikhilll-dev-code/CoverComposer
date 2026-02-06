@@ -1,8 +1,9 @@
-from fastapi import WebSocket, WebSocketDisconnect
+from fastapi import WebSocket
+from typing import List
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: list[WebSocket] = []
+        self.active_connections: List[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -11,9 +12,8 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
-    async def send_message(self, message: str):
+    async def broadcast(self, message: str):
         for connection in self.active_connections:
             await connection.send_text(message)
-
 
 manager = ConnectionManager()
