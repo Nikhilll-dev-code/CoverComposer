@@ -1,7 +1,14 @@
-node_modules
-dist
+# Node / Frontend
+node_modules/
+dist/
+
+# Environment variables
 .env
+
+# OS files
 .DS_Store
+
+# Python
 venv/
 __pycache__/
-.env
+*.pyc
