@@ -1,5 +1,7 @@
 # backend/app/core/midi_engine.py
 
+from app.config import GROQ_API_KEY
+from groq import Groq
 from music21 import stream, note, chord, tempo, key
 import uuid
 import os
@@ -7,6 +9,8 @@ import os
 # -----------------------------
 # BASIC MUSIC THEORY RULES
 # -----------------------------
+
+client = Groq(api_key=GROQ_API_KEY)
 
 MOOD_CONFIG = {
     "happy": {
