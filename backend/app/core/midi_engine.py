@@ -1,6 +1,6 @@
 # backend/app/core/midi_engine.py
 
-from app.config import GROQ_API_KEY
+from app.config import settings
 from groq import Groq
 from music21 import stream, note, chord, tempo, key
 import uuid
@@ -10,7 +10,14 @@ import os
 # BASIC MUSIC THEORY RULES
 # -----------------------------
 
-client = Groq(api_key=GROQ_API_KEY)
+CHORD_MAP = {
+    "C": ["C", "E", "G"],
+    "G": ["G", "B", "D"],
+    "F": ["F", "A", "C"],
+    "Am": ["A", "C", "E"],
+}
+
+client = Groq(api_key=settings.GROQ_API_KEY)
 
 MOOD_CONFIG = {
     "happy": {
@@ -71,12 +78,13 @@ def generate_midi(mood: str, genre: str, tempo_value: int | None = None) -> str:
 
     # Chord progression
     for chord_name in mood_data["chords"]:
-        c = chord.Chord(chord_name)
+        notes = CHORD_MAP.get(chord_name, ["C", "E", "G"])
+        c = chord.Chord(notes)
         c.quarterLength = 2
         s.append(c)
 
         # Simple melody note on top
-        melody_note = note.Note(c.root())
+        melody_note = note.Note(notes[0])
         melody_note.octave = 5
         melody_note.quarterLength = 1
         s.append(melody_note)
@@ -86,4 +94,4 @@ def generate_midi(mood: str, genre: str, tempo_value: int | None = None) -> str:
     file_path = os.path.join(OUTPUT_DIR, f"{file_id}.mid")
     s.write("midi", file_path)
 
-    return file_path
+    return f"{file_id}.mid"
